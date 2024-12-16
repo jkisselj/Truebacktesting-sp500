@@ -1,0 +1,26 @@
+import sys
+import os
+# Adding directory `scripts` in PYTHONPATH
+sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
+import logging
+import pandas as pd
+from memory_reducer import memory_reducer
+from preprocessing import preprocess_prices, preprocess_sp500
+from create_signal import create_signal
+from backtester import backtest
+logging.basicConfig(level=logging.INFO)
+# Paths to data files
+prices_path = 'data/stock_prices.csv'
+sp500_path = 'data/sp500.csv'
+# Reading and optimization
+prices = pd.read_csv(prices_path)
+sp500 = pd.read_csv(sp500_path)
+prices = memory_reducer(prices)
+sp500 = memory_reducer(sp500)
+# Data preprocess
+prices = preprocess_prices(prices)
+sp500 = preprocess_sp500(sp500)
+# reate signals
+prices = create_signal(prices)
+# backtesting
+results = backtest(prices, sp500)
